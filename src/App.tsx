@@ -1,4 +1,4 @@
-import { Authenticator, Button } from "@aws-amplify/ui-react";
+import { Authenticator, Button, Card } from "@aws-amplify/ui-react";
 import {
   associateWebAuthnCredential,
   signIn,
@@ -34,14 +34,16 @@ function App() {
       <Authenticator services={services} formFields={formFields}>
         {({ signOut, user }) => (
           <main>
-            <h1>Hello {user?.username}</h1>
-            <Button onClick={signOut}>Sign out</Button>
-            <Button
-              variation="primary"
-              onClick={() => associateWebAuthnCredential()}
-            >
-              パスキーを登録
-            </Button>
+            <Card>
+              <h1>Hello {user?.username}</h1>
+              <Button onClick={signOut}>Sign out</Button>
+              <Button
+                variation="primary"
+                onClick={() => associateWebAuthnCredential()}
+              >
+                パスキーを登録
+              </Button>
+            </Card>
           </main>
         )}
       </Authenticator>
