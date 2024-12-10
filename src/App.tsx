@@ -35,7 +35,7 @@ function App() {
       <Authenticator services={services} formFields={formFields}>
         {({ signOut, user }) => (
           <main>
-            <h1>Hello {user?.userId}</h1>
+            <h1>Hello {user?.username}</h1>
             <Button onClick={signOut}>Sign out</Button>
             <Button
               variation="primary"
