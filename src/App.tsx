@@ -1,4 +1,5 @@
 import { Authenticator, Button } from "@aws-amplify/ui-react";
+import { StorageBrowser } from "@aws-amplify/ui-react-storage";
 import {
   associateWebAuthnCredential,
   signIn,
@@ -34,7 +35,7 @@ function App() {
       <Authenticator services={services} formFields={formFields}>
         {({ signOut, user }) => (
           <main>
-            <h1>Hello {user?.username}</h1>
+            <h1>Hello {user?.userId}</h1>
             <Button onClick={signOut}>Sign out</Button>
             <Button
               variation="primary"
@@ -42,6 +43,7 @@ function App() {
             >
               パスキーを登録
             </Button>
+            <StorageBrowser></StorageBrowser>
           </main>
         )}
       </Authenticator>

@@ -1,3 +1,7 @@
+import {
+  createAmplifyAuthAdapter,
+  createStorageBrowser,
+} from "@aws-amplify/ui-react-storage/browser";
 import "@aws-amplify/ui-react/styles.css";
 import { Amplify } from "aws-amplify";
 import React from "react";
@@ -13,3 +17,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <App />
   </React.StrictMode>
 );
+
+createStorageBrowser({
+  config: createAmplifyAuthAdapter(),
+});
