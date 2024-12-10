@@ -1,38 +1,50 @@
-import { generateClient } from "aws-amplify/data";
-import { useEffect, useState } from "react";
-import type { Schema } from "../amplify/data/resource";
+import { Authenticator, Button } from "@aws-amplify/ui-react";
+import {
+  associateWebAuthnCredential,
+  signIn,
+  SignInInput,
+} from "aws-amplify/auth";
 
-const client = generateClient<Schema>();
-
+const services = {
+  async handleSignIn(input: SignInInput) {
+    // パスワードが入力されていなければパスキーでサインインさせる
+    return await signIn(
+      input.password
+        ? input
+        : {
+            username: input.username,
+            options: {
+              authFlowType: "USER_AUTH",
+              preferredChallenge: "WEB_AUTHN",
+            },
+          }
+    );
+  },
+};
+const formFields = {
+  signIn: {
+    password: {
+      isRequired: false,
+    },
+  },
+};
 function App() {
-  const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
-
-  useEffect(() => {
-    client.models.Todo.observeQuery().subscribe({
-      next: (data) => setTodos([...data.items]),
-    });
-  }, []);
-
-  function createTodo() {
-    client.models.Todo.create({ content: window.prompt("Todo content") });
-  }
-
   return (
     <main>
-      <h1>My todos</h1>
-      <button onClick={createTodo}>+ new</button>
-      <ul>
-        {todos.map((todo) => (
-          <li key={todo.id}>{todo.content}</li>
-        ))}
-      </ul>
-      <div>
-        🥳 App successfully hosted. Try creating a new todo.
-        <br />
-        <a href="https://docs.amplify.aws/react/start/quickstart/#make-frontend-updates">
-          Review next step of this tutorial.
-        </a>
-      </div>
+      <Authenticator services={services} formFields={formFields}>
+        {({ signOut, user }) => (
+          <main>
+            <h1>Hello {user?.username}</h1>
+            <Button onClick={signOut}>Sign out</Button>
+            <Button
+              variation="primary"
+              onClick={() => associateWebAuthnCredential()}
+            >
+              パスキーを登録
+            </Button>
+          </main>
+        )}
+      </Authenticator>
     </main>
   );
 }

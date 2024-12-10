@@ -1,3 +1,4 @@
+import "@aws-amplify/ui-react/styles.css";
 import { Amplify } from "aws-amplify";
 import React from "react";
 import ReactDOM from "react-dom/client";
