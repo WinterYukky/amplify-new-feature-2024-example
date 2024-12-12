@@ -4,6 +4,7 @@ import {
   Button,
   Card,
   Collection,
+  Flex,
   TextField,
 } from "@aws-amplify/ui-react";
 import { StorageBrowser } from "@aws-amplify/ui-react-storage";
@@ -19,7 +20,6 @@ import { Schema } from "../amplify/data/resource";
 
 const services = {
   async handleSignIn(input: SignInInput) {
-    // パスワードが入力されていなければパスキーでサインインさせる
     return await signIn(
       input.password
         ? input
@@ -64,7 +64,7 @@ function App() {
   >([]);
   let conversation: Awaited<ReturnType<typeof getConversation>>;
   const postMessage = async () => {
-    let localHistory = history;
+    const localHistory = history;
     conversation ??= await getConversation();
     // Assistant messages come back as websocket events
     // over a subscription
@@ -104,6 +104,7 @@ function App() {
     conversation?.sendMessage({
       content: localHistory.map((v) => ({ text: v.message })),
     });
+    setMessage("");
   };
   return (
     <main>
@@ -119,20 +120,13 @@ function App() {
               >
                 パスキーを登録
               </Button>
-              <StorageBrowser></StorageBrowser>
+              <StorageBrowser />
 
               <Button variation="primary" onClick={() => generation()}>
                 Generation
               </Button>
               <Alert>{generationResult}</Alert>
 
-              <TextField
-                label="message"
-                onInput={(e) => setMessage(e.currentTarget.value)}
-              ></TextField>
-              <Button variation="primary" onClick={() => postMessage()}>
-                Conversation
-              </Button>
               <Collection
                 items={
                   nowStreaming
@@ -157,6 +151,23 @@ function App() {
                   </Card>
                 )}
               </Collection>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  postMessage();
+                }}
+              >
+                <Flex>
+                  <TextField
+                    label="Conversation"
+                    labelHidden={true}
+                    width="75%"
+                    value={message}
+                    onInput={(e) => setMessage(e.currentTarget.value)}
+                  ></TextField>
+                  <Button type="submit">Conversation</Button>
+                </Flex>
+              </form>
             </Card>
           </main>
         )}
